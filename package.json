@@ -1,0 +1,19 @@
+{
+  "name": "projectforbank",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/zahraai3/projectforBank.git"
+  },
+  "author": "zahraa",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zahraai3/projectforBank/issues"
+  },
+  "homepage": "https://github.com/zahraai3/projectforBank#readme"
+}
