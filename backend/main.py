@@ -1,7 +1,20 @@
 from fastapi import FastAPI,HTTPException
 from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
+from datetime import datetime
+from typing import Optional, List, Dict
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],    
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+transactions : List[Dict] = []
+
 
 class BankAcc:
     def __init__(self,name:str,id:int,total:int):
@@ -23,6 +36,15 @@ class TransferRequest(BaseModel):
 class depositAndWithdrawal(BaseModel):
     user_name:str
     amount:int
+
+
+@app.get('/users/{username}')
+def get_user(username: str):
+    user_account = next((u for u in users if u.name.lower() == username.lower()), None)
+    if not user_account:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {"name": user_account.name, "total": user_account.total}
+
 
 @app.get('/users')
 def show_users():
@@ -47,8 +69,19 @@ def transfer_money(request:TransferRequest):
     user_account.total -= request.amount
     second_user_account.total += request.amount
 
+
+    transactions.append({
+        "type": "transfer",
+        "amount": request.amount,
+        "at": datetime.now().isoformat(timespec="seconds"),
+        "from_user": user_account.name,
+        "to_user": second_user_account.name,
+        "balance_after": user_account.total,
+        "owner": user_account.name
+    })
+
     return {
-        "message": f"A total of {request.amount}$ has been transferred from {user_account.name} to {second_user_account.name}",
+        "message": f"A total of {request.amount}$ has been transferred from {user_account.name.upper()} to {second_user_account.name.upper()}",
         "from_user_balance": user_account.total,
         "to_user_balance": second_user_account.total,
     }
@@ -61,8 +94,19 @@ def deposit_money(request:depositAndWithdrawal):
     
     user_account.total += request.amount
 
+    transactions.append({
+        "type": "deposit",
+        "amount": request.amount,
+        "at": datetime.now().isoformat(timespec="seconds"),
+        "from_user": None,
+        "to_user": user_account.name,
+        "balance_after": user_account.total,
+        "owner": user_account.name
+    })
+
+
     return {
-        "message":f"A total of {request.amount} has been deposited to {user_account.name.upper()}",
+        "message":f"A total of $ {request.amount} has been deposited to {user_account.name.upper()}",
         "user_balance":user_account.total,
     }
 
@@ -78,8 +122,18 @@ def withdrawal_money(request:depositAndWithdrawal):
     
     user_account.total -= request.amount
 
+    transactions.append({
+        "type": "withdrawal",
+        "amount": request.amount,
+        "at": datetime.now().isoformat(timespec="seconds"),
+        "from_user":user_account.name,
+        "to_user": None,
+        "balance_after": user_account.total,
+        "owner": user_account.name
+    })
+
     return {
-        "message":f"Atotal of {request.amount} has been withdrawn from {user_account.name.upper()}",
+        "message":f"Atotal of $ {request.amount} has been withdrawn from {user_account.name.upper()}",
         "user_balance":user_account.total,
     }
 

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank account</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Bank Account</h1>
+      
+        <div class="section">
+            <label>User Name :</label>
+            <input type="text" id="username" placeholder="Enter your name" required>
+            <button onclick="loadUser()">Show Account</button>
+        </div>
+
+        <div class="section">
+            <label>Deposit Amount :</label>
+            <input type="number" id="depositamount" placeholder="Enter amount to deposit">
+            <button onclick="depositMoney()">Deposit</button>
+        </div>
+
+        <div class="section">
+            <label>Withdraw Amount :</label>
+            <input type="number" id="withdrawamount" placeholder="Enter amount to withdraw">
+            <button onclick="withdrawMoney()">Withdraw</button>
+        </div>
+
+        <div class="section">
+            <label>Transfer To :</label>
+            <input type="text" id="transferTo" placeholder="Recipient name">
+            <label>Amount</label>
+            <input type="number" id="transferAmount" placeholder="Enter amount to transfer">
+            <button onclick="transferMoney()">Transfer</button>
+        </div>
+
+            <div id="user">
+                <h2 id="forusername"></h2>
+                <h3 id="forurtotal"></h3>
+            </div>
+        </div>
+
+         
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
